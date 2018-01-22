@@ -5,8 +5,8 @@ from .models import Profile
 
 
 @receiver(pre_save, sender=Profile, dispatch_uid="create_user_profile")
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
+def create_user_profile(sender, instance, **kwargs):
+    if instance:
         Profile.objects.create(user=instance)
 
 

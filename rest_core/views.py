@@ -16,9 +16,9 @@ from .serializers import UserSerializer, TripSerializer
 TIME_ZONE = getattr(settings, "TIME_ZONE", 'Europe/Kiev')
 
 
-def error_404(request):
+def error_404(request, exception):
     data = {'detail': 'page not found. Check README.pdf in project folder to obtain valid URL routes list.'}
-    return JsonResponse(data, status=404)
+    return JsonResponse(data=data, status=404)
 
 
 class TripViewSet(ViewSet):

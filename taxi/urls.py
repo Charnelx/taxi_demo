@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include, url, handler404
 from django.contrib import admin
 from django.urls import path
 from rest_framework_jwt.views import refresh_jwt_token
@@ -30,3 +30,5 @@ if settings.DEBUG:
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
     ]
+
+handler404 = views.error_404

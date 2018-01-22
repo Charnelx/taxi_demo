@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 import pytz
 from rest_framework import status
@@ -13,6 +14,11 @@ from .permissions import IsDriver, IsOwner
 from .serializers import UserSerializer, TripSerializer
 
 TIME_ZONE = getattr(settings, "TIME_ZONE", 'Europe/Kiev')
+
+
+def error_404(request):
+    data = {'detail': 'page not found. Check README.pdf in project folder to obtain valid URL routes list.'}
+    return JsonResponse(data, status=404)
 
 
 class TripViewSet(ViewSet):

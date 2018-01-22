@@ -41,14 +41,16 @@ class TripViewSet(ViewSet):
         queryset = Trip.objects.all()
         trips = queryset.filter(user=user_pk)
 
-        filters = {}
+        # filters = {}
         tz = pytz.timezone(TIME_ZONE)
 
         # try/except preventing malformed timestamps to crash service
         if date_start:
             try:
                 py_date_start = datetime.fromtimestamp(int(date_start), tz)
+                filters = {}
                 filters['start__lte'] = py_date_start
+                trips = trips.filter(**filters)
             except Exception as err:
                 err_msg = {'detail': 'start argument: {}'.format(err.strerror.lower())}
                 return Response(err_msg, status=status.HTTP_400_BAD_REQUEST)
@@ -56,12 +58,14 @@ class TripViewSet(ViewSet):
         if date_end:
             try:
                 py_date_end = datetime.fromtimestamp(int(date_end), tz)
+                filters = {}
                 filters['end__gte'] = py_date_end
+                trips = trips.filter(**filters)
             except Exception as err:
                 err_msg = {'detail': 'end argument: {}'.format(err.strerror.lower())}
                 return Response(err_msg, status=status.HTTP_400_BAD_REQUEST)
 
-        trips = trips.filter(**filters)
+        # trips = trips.filter(**filters)
 
         serializer = TripSerializer(trips, many=True)
 
@@ -69,7 +73,12 @@ class TripViewSet(ViewSet):
 
     def retrieve(self, request, pk=None, user_pk=None):
         queryset = Trip.objects.all().select_related('user')
-        trip = get_object_or_404(queryset, pk=pk, user=user_pk)
+        try:
+            trip = get_object_or_404(queryset, pk=pk, user=user_pk)
+        except ValueError as err:
+            err_msg = {'detail': 'pk_argument: {}'.format(err.strerror.lower())}
+            return Response(err_msg, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = TripSerializer(trip)
         return Response(serializer.data)
 

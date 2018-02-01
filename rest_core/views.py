@@ -37,7 +37,7 @@ class TripViewSet(ViewSet):
         date_end = request.query_params.get('end', None)
 
         # uncomment this and comment get_permissions method to change view
-        # behavior with users how are not a drivers from raising standard 403 error
+        # behavior with users who are not a drivers from raising standard 403 error
         # to 401 error
 
         # user = User.objects.get(pk=user_pk)
